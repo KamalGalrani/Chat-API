@@ -87,7 +87,6 @@ class Registration
                 $response->reason,
             ]);
 
-          throw new Exception('There was a problem trying to request the code.');
       } else {
           $this->eventManager()->fire('onCredentialsGood',
             [
