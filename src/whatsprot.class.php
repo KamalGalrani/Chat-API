@@ -339,7 +339,7 @@ class WhatsProt
     public function sendActiveStatus()
     {
         $messageNode = new ProtocolNode('presence', ['type' => 'active'], null, '');
-        $this->sendNode($messageNode);
+        return $this->sendNode($messageNode);
     }
 
     public function sendSetPreKeys($new = false)
@@ -644,7 +644,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$deleteNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -669,7 +669,7 @@ class WhatsProt
                 'xmlns' => 'urn:xmpp:whatsapp:dirty',
             ], $catnodes, null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     public function sendClientConfig()
@@ -686,7 +686,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     public function sendSetGCM($gcm = null)
@@ -706,7 +706,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     public function sendGetClientConfig()
@@ -721,7 +721,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -747,7 +747,7 @@ class WhatsProt
                 'to'    => 'c.us',
             ], [$modifyNode], null);
 
-        $this->sendNode($iqNode);
+        return $this->sendNode($iqNode);
     }
 
     /**
@@ -757,7 +757,7 @@ class WhatsProt
      */
     public function sendGetGroups()
     {
-        $this->sendGetGroupsFiltered('participating');
+        return $this->sendGetGroupsFiltered('participating');
     }
 
     /**
@@ -783,7 +783,7 @@ class WhatsProt
                 'to'    => $this->getJID($groupID),
             ], [$queryNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -805,7 +805,7 @@ class WhatsProt
                 'type'  => 'get',
             ], [$child2], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -823,7 +823,7 @@ class WhatsProt
                 'type'  => 'get',
             ], [$privacyNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -852,7 +852,7 @@ class WhatsProt
                 'xmlns' => 'privacy',
             ], [$privacyNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -882,7 +882,7 @@ class WhatsProt
                 'to'    => $this->getJID($number),
             ], [$picture], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -919,9 +919,7 @@ class WhatsProt
                 'type'  => 'get',
             ], [$listNode], null);
 
-        $this->sendNode($iqNode);
-
-        return true;
+        return $this->sendNode($iqNode);
     }
 
     /**
@@ -939,7 +937,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -966,7 +964,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$pricingNode], null);
 
-        $this->sendNode($node);
+        retun $this->sendNode($node);
     }
 
     /**
@@ -984,7 +982,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$extendingNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1002,7 +1000,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$listsNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1025,7 +1023,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$normalizeNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1066,8 +1064,9 @@ class WhatsProt
                 'id'    => $msgId,
             ], [$removeNode], null);
 
-        $this->sendNode($node);
+        $ret = $this->sendNode($node);
         $this->waitForServer($msgId);
+        return $ret;
     }
 
     /**
@@ -1085,7 +1084,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$pingNode], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1116,7 +1115,7 @@ class WhatsProt
                 new ProtocolNode('status', null, $children, null),
             ], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1188,7 +1187,7 @@ class WhatsProt
                 'xmlns' => 'w:g2',
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1225,7 +1224,7 @@ class WhatsProt
                 'xmlns' => 'w:g2',
             ], [$leave], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1237,7 +1236,7 @@ class WhatsProt
     public function sendGroupsParticipantsAdd($groupId, $participant)
     {
         $msgId = $this->createMsgId();
-        $this->sendGroupsChangeParticipants($groupId, $participant, 'add', $msgId);
+        return $this->sendGroupsChangeParticipants($groupId, $participant, 'add', $msgId);
     }
 
     /**
@@ -1249,7 +1248,7 @@ class WhatsProt
     public function sendGroupsParticipantsRemove($groupId, $participant)
     {
         $msgId = $this->createMsgId();
-        $this->sendGroupsChangeParticipants($groupId, $participant, 'remove', $msgId);
+        return $this->sendGroupsChangeParticipants($groupId, $participant, 'remove', $msgId);
     }
 
     /**
@@ -1261,7 +1260,7 @@ class WhatsProt
     public function sendPromoteParticipants($gId, $participant)
     {
         $msgId = $this->createMsgId();
-        $this->sendGroupsChangeParticipants($gId, $participant, 'promote', $msgId);
+        return $this->sendGroupsChangeParticipants($gId, $participant, 'promote', $msgId);
     }
 
     /**
@@ -1273,7 +1272,7 @@ class WhatsProt
     public function sendDemoteParticipants($gId, $participant)
     {
         $msgId = $this->createMsgId();
-        $this->sendGroupsChangeParticipants($gId, $participant, 'demote', $msgId);
+        return $this->sendGroupsChangeParticipants($gId, $participant, 'demote', $msgId);
     }
 
     /**
@@ -1378,7 +1377,7 @@ class WhatsProt
      */
     public function sendMessageComposing($to)
     {
-        $this->sendChatState($to, 'composing');
+        return $this->sendChatState($to, 'composing');
     }
 
     /**
@@ -1448,7 +1447,7 @@ class WhatsProt
      */
     public function sendMessagePaused($to)
     {
-        $this->sendChatState($to, 'paused');
+        return $this->sendChatState($to, 'paused');
     }
 
     protected function sendChatState($to, $state)
@@ -1458,7 +1457,7 @@ class WhatsProt
                 'to' => $this->getJID($to),
             ], [new ProtocolNode($state, null, null, null)], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1506,7 +1505,7 @@ class WhatsProt
     public function sendOfflineStatus()
     {
         $messageNode = new ProtocolNode('presence', ['type' => 'unavailable'], null, '');
-        $this->sendNode($messageNode);
+        return $this->sendNode($messageNode);
     }
 
     /**
@@ -1542,13 +1541,14 @@ class WhatsProt
         $presence['name'] = $this->name;
         $presence['type'] = 'available';
         $node = new ProtocolNode('presence', $presence, null, '');
-        $this->sendNode($node);
+        $ret = $this->sendNode($node);
         $this->eventManager()->fire('onSendPresence',
             [
                 $this->phoneNumber,
                 $presence['type'],
                 $this->name,
             ]);
+        return $ret;
     }
 
     /**
@@ -1559,7 +1559,7 @@ class WhatsProt
     public function sendPresenceSubscription($to)
     {
         $node = new ProtocolNode('presence', ['type' => 'subscribe', 'to' => $this->getJID($to)], null, '');
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1570,7 +1570,7 @@ class WhatsProt
     public function sendPresenceUnsubscription($to)
     {
         $node = new ProtocolNode('presence', ['type' => 'unsubscribe', 'to' => $this->getJID($to)], null, '');
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1581,7 +1581,7 @@ class WhatsProt
      */
     public function sendSetGroupPicture($gjid, $path)
     {
-        $this->sendSetPicture($gjid, $path);
+        return $this->sendSetPicture($gjid, $path);
     }
 
     /**
@@ -1620,7 +1620,7 @@ class WhatsProt
                 'type'  => 'set',
             ], [$child2], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1630,7 +1630,7 @@ class WhatsProt
      */
     public function sendSetProfilePicture($path)
     {
-        $this->sendSetPicture($this->phoneNumber, $path);
+        return $this->sendSetPicture($this->phoneNumber, $path);
     }
 
     /*
@@ -1656,7 +1656,7 @@ class WhatsProt
                 'xmlns' => 'w:profile:picture',
             ], [$picture, $thumb], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1678,7 +1678,7 @@ class WhatsProt
                 'to'   => Constants::WHATSAPP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -1698,12 +1698,13 @@ class WhatsProt
                 'xmlns' => 'status',
             ], [$child], null);
 
-        $this->sendNode($node);
+        $ret = $this->sendNode($node);
         $this->eventManager()->fire('onSendStatusUpdate',
             [
                 $this->phoneNumber,
                 $txt,
             ]);
+        return $ret;
     }
 
     /**
@@ -1776,7 +1777,7 @@ class WhatsProt
               'to' => $this->getJID($to),
             ], [$rejectNode], null);
 
-        $this->sendNode($callNode);
+        return $this->sendNode($callNode);
     }
 
     /**
@@ -2412,7 +2413,7 @@ class WhatsProt
 
         $ack = new ProtocolNode('ack', $attributes, null, null);
 
-        $this->sendNode($ack);
+        return $this->sendNode($ack);
     }
 
     /**
@@ -2752,8 +2753,11 @@ class WhatsProt
                         'Connection closed!',
                     ]
               );
+            } else {
+              return true;
             }
         }
+        return false;
     }
 
     /**
@@ -2773,7 +2777,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_GROUP_SERVER,
             ], [$child], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -2799,7 +2803,7 @@ class WhatsProt
                 'to'    => $this->getJID($groupId),
             ], [$child], '');
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
@@ -2916,7 +2920,7 @@ class WhatsProt
           'id'   => $idNode,
         ], [$listNode], null);
 
-        $this->sendNode($messageNode);
+        return $this->sendNode($messageNode);
     }
 
     /**
@@ -2929,7 +2933,7 @@ class WhatsProt
     {
         $this->timeout = time();
         $this->debugPrint($node->nodeString('tx  ')."\n");
-        $this->sendData($this->writer->write($node, $encrypt));
+        return $this->sendData($this->writer->write($node, $encrypt));
     }
 
     /**
@@ -3005,7 +3009,7 @@ class WhatsProt
             'xmlns' => 'w:profile:picture',
         ], [$picture, $preview], null);
 
-        $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
