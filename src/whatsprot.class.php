@@ -45,6 +45,7 @@ class WhatsProt
     protected $groupId = false;         // Id of the group created.
     protected $lastId = false;          // Id to the last message sent.
     protected $loginStatus;             // Holds the login status.
+    protected $onlineStatus;             // Holds the login status.
     protected $mediaFileInfo = []; // Media File Information
     protected $mediaQueue = [];    // Queue for media message nodes
     protected $messageCounter = 0;      // Message counter for auto-id.
@@ -135,6 +136,7 @@ class WhatsProt
 
         $this->name = $nickname;
         $this->loginStatus = Constants::DISCONNECTED_STATUS;
+        $this->onlineStatus = false;
         $this->eventManager = new WhatsApiEventsManager();
     }
 
@@ -226,6 +228,7 @@ class WhatsProt
          }
          $this->socket = null;
          $this->loginStatus = Constants::DISCONNECTED_STATUS;
+         $this->onlineStatus = false;
          $this->logFile('info', 'Disconnected from WA server');
          $this->eventManager()->fire('onDisconnect',
              [
@@ -343,7 +346,9 @@ class WhatsProt
     public function sendActiveStatus()
     {
         $messageNode = new ProtocolNode('presence', ['type' => 'active'], null, '');
-        return $this->sendNode($messageNode);
+        $ret = $this->sendNode($messageNode);
+        if ($ret) { $this->onlineStatus = true; }
+        return $ret;
     }
 
     public function sendSetPreKeys($new = false)
@@ -1509,7 +1514,9 @@ class WhatsProt
     public function sendOfflineStatus()
     {
         $messageNode = new ProtocolNode('presence', ['type' => 'unavailable'], null, '');
-        return $this->sendNode($messageNode);
+        $ret = $this->sendNode($messageNode);
+        if ($ret) { $this->onlineStatus = false; }
+        return $ret;
     }
 
     /**
@@ -1552,6 +1559,7 @@ class WhatsProt
                 $presence['type'],
                 $this->name,
             ]);
+        if ($ret) { $this->onlineStatus = true; }
         return $ret;
     }
 
@@ -1893,6 +1901,16 @@ class WhatsProt
         return $this->isConnected() && !empty($this->loginStatus) && $this->loginStatus === Constants::CONNECTED_STATUS;
     }
 
+    /**
+     * Are we online?
+     *
+     * @return bool
+     */
+    public function isOnline()
+    {
+        return $this->isConnected() && $this->isLoggedIn() && $this->onlineStatus;
+    }
+
     public function sendSync($numbers, $deletedNumbers = null, $syncType = 3)
     {
         $users = [];
@@ -2124,6 +2142,7 @@ class WhatsProt
             $this->processChallenge($node);
         } elseif ($node->getTag() == 'failure') {
             $this->loginStatus = Constants::DISCONNECTED_STATUS;
+            $this->onlineStatus = false;
             $this->eventManager()->fire('onLoginFailed',
                 [
                     $this->phoneNumber,
@@ -2621,6 +2640,7 @@ class WhatsProt
                         'Socket EOF',
                     ]
                 );
+                $this->onlineStatus = false;
             }
             if (strlen($header) == 0) {
                 //no data received
@@ -2755,10 +2775,11 @@ class WhatsProt
                    [
                         $this->phoneNumber,
                         'Connection closed!',
-                    ]
-              );
+                   ]
+                );
+                $this->onlineStatus = false;
             } else {
-              return true;
+                return true;
             }
         }
         return false;
