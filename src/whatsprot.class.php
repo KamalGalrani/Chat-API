@@ -294,7 +294,7 @@ class WhatsProt
      *
      * @return bool
      */
-    public function pollMessage()
+    public function pollMessage($fast = false)
     {
         if (!$this->isConnected()) {
             throw new ConnectionException('Connection Closed!');
@@ -303,7 +303,11 @@ class WhatsProt
         $r = [$this->socket];
         $w = [];
         $e = [];
-        $s = socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC);
+        if ( $fast ) {
+          $s = socket_select($r, $w, $e, 0, 0);
+        } else {
+          $s = socket_select($r, $w, $e, Constants::TIMEOUT_SEC, Constants::TIMEOUT_USEC);
+        }
 
         if ($s) {
 
