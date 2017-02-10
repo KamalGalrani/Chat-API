@@ -973,7 +973,7 @@ class WhatsProt
                 'to'    => Constants::WHATSAPP_SERVER,
             ], [$pricingNode], null);
 
-        retun $this->sendNode($node);
+        return $this->sendNode($node);
     }
 
     /**
