@@ -64,6 +64,7 @@ class NotificationHandler implements Handler
                     [
                         $this->phoneNumber,
                         $this->node->getChild(0)->getAttribute('jid'),
+                        $this->node->getAttribute('from'),
                 ]);
             } elseif ($notification == 'update') {
                 $this->parent->eventManager()->fire('onNumberWasUpdated',

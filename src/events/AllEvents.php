@@ -292,7 +292,7 @@ abstract class AllEvents
     {
     }
 
-    public function onNumberWasRemoved($mynumber, $jid)
+    public function onNumberWasRemoved($mynumber, $jid, $from)
     {
     }
 
