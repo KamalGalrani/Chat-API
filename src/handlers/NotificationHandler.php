@@ -105,7 +105,8 @@ class NotificationHandler implements Handler
             } elseif ($this->node->hasChild('create')) {
                 $groupMembers = [];
                 foreach ($this->node->getChild(0)->getChild(0)->getChildren() as $cn) {
-                    $groupMembers[] = $cn->getAttribute('jid');
+                    $member = array('jid'=> $cn->getAttribute('jid'), 'type'=>$cn->getAttribute('type'));
+                    $groupMembers[] = $member;
                 }
                 $this->parent->eventManager()->fire('onGroupisCreated',
                     [
