@@ -35,6 +35,7 @@ class WhatsProt
     /**
      * Property declarations.
      */
+    protected $simulation;
     protected $accountInfo;             // The AccountInfo object.
     protected $challengeFilename;       // Path to nextChallenge.dat.
     protected $challengeData;           //
@@ -94,11 +95,12 @@ class WhatsProt
      * @param $datafolder
      *  The folder for whatsapp data like MEDIA, PICTURES etc.. By default that is wadata in src folder
      */
-    public function __construct($number, $nickname, $debug = false, $log = false, $datafolder = null)
+    public function __construct($number, $nickname, $debug = false, $log = false, $datafolder = null, $simulate = false)
     {
         $this->writer = new BinTreeNodeWriter();
         $this->reader = new BinTreeNodeReader();
         $this->debug = $debug;
+        $this->simulation = $simulate;
         $this->phoneNumber = $number;
 
         if ($datafolder !== null && file_exists($datafolder)) {
@@ -174,7 +176,11 @@ class WhatsProt
         /* Create a TCP/IP socket. */
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         if ($socket !== false) {
-            $result = socket_connect($socket, 'e'.rand(1, 16).'.whatsapp.net', Constants::PORT);
+            if ( $this->simulation ) {
+              $result = socket_connect($socket, 'localhost', '9000');
+            } else {
+              $result = socket_connect($socket, 'e'.rand(1, 16).'.whatsapp.net', Constants::PORT);
+            }
             if ($result === false) {
                 $socket = false;
             }
@@ -279,6 +285,16 @@ class WhatsProt
      */
     public function loginWithPassword($password)
     {
+        if ($this->simulation) {
+          $this->loginStatus = Constants::CONNECTED_STATUS;
+          $this->logFile('info', '{number} successfully logged in', ['number' => $this->phoneNumber]);
+          $this->sendAvailableForChat();
+          $this->sendGetPrivacyBlockedList();
+          $this->sendGetClientConfig();
+          $this->setMessageId(substr(bin2hex(mcrypt_create_iv(64, MCRYPT_DEV_URANDOM)), 0, 22)); // 11 char hex
+          return;
+        }
+
         $this->password = $password;
         if (is_readable($this->challengeFilename)) {
             $challengeData = file_get_contents($this->challengeFilename);
@@ -2958,7 +2974,11 @@ class WhatsProt
     {
         $this->timeout = time();
         $this->debugPrint($node->nodeString('tx  ')."\n");
-        return $this->sendData($this->writer->write($node, $encrypt));
+        if ( $this->simulation ) {
+          return true;
+        } else {
+          return $this->sendData($this->writer->write($node, $encrypt));
+        }
     }
 
     /**
