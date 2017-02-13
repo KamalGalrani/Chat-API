@@ -9,10 +9,18 @@
  * @return string
  *                Returns the number of phone cleanly.
  **/
+
+function isGroup($from)
+{
+    if (strpos($from, '@g.us') !== false) { return true; }
+    return false;
+}
+
 function ExtractNumber($from)
 {
     return str_replace(['@s.whatsapp.net', '@g.us'], '', $from);
 }
+
 function pkcs5_unpad($text)
 {
     $pad = ord($text{strlen($text) - 1});
